@@ -19,7 +19,7 @@ include_once( plugin_dir_path( __FILE__ ) . 'update.php');
 $updater = new Smashing_Updater( __FILE__ ); // instantiate our class
 $updater->set_username( 'jaspreet42' ); // set username
 $updater->set_repository( 'bsd-structure-data' ); // set repo
-
+$updater->initialize(); 
 private function get_repository_info() {
   if ( is_null( $this->github_response ) ) { // Do we have a response?
     $request_uri = sprintf( 'https://api.github.com/repos/%s/%s/releases', $this->username, $this->repository ); // Build URI
