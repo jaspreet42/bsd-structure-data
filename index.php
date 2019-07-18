@@ -66,3 +66,26 @@ class Smashing_Updater {
     $this->active   = is_plugin_active( $this->basename );
   }
 }
+
+
+private $username;
+private $repository;
+private $authorize_token;
+private $github_response;
+
+public function set_username( $username ) {
+  $this->username = $username;
+}
+public function set_repository( $repository ) {
+  $this->repository = $repository;
+}
+public function authorize( $token ) {
+  $this->authorize_token = $token;
+}
+
+// Include our updater file
+include_once( plugin_dir_path( __FILE__ ) . 'update.php');
+
+$updater = new Smashing_Updater( __FILE__ ); // instantiate our class
+$updater->set_username( 'jaspreet42' ); // set username
+$updater->set_repository( 'bsd-structure-data' ); // set repo
