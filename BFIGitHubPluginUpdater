@@ -4,7 +4,7 @@ class BFIGitHubPluginUpdater {
     private $slug; // plugin slug
     private $pluginData; // plugin data
     private $username; // GitHub username
-    private $repo=; // GitHub repo name
+    private $repo; // GitHub repo name
     private $pluginFile; // __FILE__ of our plugin
     private $githubAPIResult; // holds data from GitHub
     private $accessToken; // GitHub private repo token
@@ -29,7 +29,7 @@ $this->pluginData = get_plugin_data( $this->pluginFile );
  
     // Get information regarding our plugin from GitHub
     private function getRepoReleaseInfo() {
-       / Only do this once
+       // Only do this once
 if ( ! empty( $this->githubAPIResult ) ) {
     return;
 }
