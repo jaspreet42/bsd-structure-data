@@ -1,0 +1,224 @@
+/********************
+*** Default CSS
+****************/
+textarea{
+    resize:none;
+    height:100px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/********************
+*** Plugin CSS
+****************/
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.switch .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.switch input:checked + .slider {
+    background-color: #2196F3;
+}
+
+.switch input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+.switch input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.switch .slider.round {
+    border-radius: 34px;
+}
+
+.switch .slider.round:before {
+    border-radius: 50%;
+}
+
+ul.social-organization-schemas-wrap li{
+    list-style: none;
+    display:inline-block;
+    vertical-align:middle    
+}
+ul.social-organization-schemas-wrap li a{
+    text-decoration: none;
+}
+
+
+/******************
+NAP Field CSS
+******/
+.nap_box{
+    display: block;
+    /*            grid-template-columns: max-content 1fr;
+                grid-row-gap: 10px;
+                grid-column-gap: 20px;*/
+}
+.nap_field{
+    display: block;
+    width:100%;
+}
+.nap_field label{
+    width:100%;
+    display:block;
+    font-weight:600;
+    margin-bottom:10px;
+}
+.nap_field input{
+    width:100%;
+}
+#mytabs li {
+
+    margin-bottom: 0px;
+
+}
+.nap_box .nap_field.meta-box-checkbox-wrapper input[type="checkbox"] {
+    height: 17px;
+    width: 17px;
+}
+.nap_box .nap_field.meta-box-checkbox-wrapper > *{
+    display:inline-block;
+    vertical-align: middle;
+}
+.nap_box .nap_field.meta-box-checkbox-wrapper label{
+    width:auto;
+    margin-bottom:0px;
+}
+.featured-post-icons{
+    height:24px;
+    width:24px;
+    background:url('../img/featured-icon.png') no-repeat;
+    background-size:cover;
+    display:block;
+}
+.postbox{
+    width:100%;
+    float:left;
+}
+.meta-options.nap_field.meta-box-checkbox-wrapper {
+    float: left;
+    max-width: 260px; 
+    height: 35px;
+}  
+#client-reviews-wrap{
+    padding:25px 15px;
+}
+#client-reviews-wrap .meta-options.nap_field {
+  margin-bottom: 20px;
+}   
+#client_review_content_field {
+    width: 100%;
+}
+
+.meta-box-radiobox-wrapper [type="radio"]:checked,
+.meta-box-radiobox-wrapper [type="radio"]:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+.meta-box-radiobox-wrapper [type="radio"]:checked + label,
+.meta-box-radiobox-wrapper [type="radio"]:not(:checked) + label
+{
+    position: relative;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+    display: inline-block;
+    color: #000;
+}
+.meta-box-radiobox-wrapper [type="radio"]:checked + label:before,
+.meta-box-radiobox-wrapper [type="radio"]:not(:checked) + label:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 1px solid #ccc;
+    border-radius: 100%;
+    background: #fff;
+}
+.meta-box-radiobox-wrapper [type="radio"]:checked + label:after,
+.meta-box-radiobox-wrapper [type="radio"]:not(:checked) + label:after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    background: #333;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    border-radius: 100%;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+.meta-box-radiobox-wrapper [type="radio"]:not(:checked) + label:after {
+    opacity: 0;
+    -webkit-transform: scale(0);
+    transform: scale(0);
+}
+.meta-box-radiobox-wrapper [type="radio"]:checked + label:after {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    transform: scale(1);
+}
+.fullwidth.label1{
+    float:left;
+    width:100%;
+}
+#menu-options-wrapper,
+#youtube-videos-wrap {
+    padding: 20px;
+}
+#menu-options-wrapper .meta-options.nap_field {
+    margin: 15px 0px;
+}
+#youtube-videos-wrap .meta-options.nap_field {
+    margin-bottom: 20px;
+}
+#youtube-videos-wrap textarea {
+    width: 100%;
+}
