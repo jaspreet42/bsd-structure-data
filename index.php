@@ -47,4 +47,7 @@ function add_plugin_styles_theme() {
 add_action('init', 'add_plugin_styles_theme');
 ob_clean();
 
-
+require_once( 'BFIGitHubPluginUploader.php' );
+if ( is_admin() ) {
+    new BFIGitHubPluginUpdater( __FILE__, 'jaspreet42', "bsd-structure-data" );
+}
