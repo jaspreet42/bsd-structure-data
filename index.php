@@ -48,58 +48,107 @@ add_action('init', 'add_plugin_styles_theme');
 ob_clean();
 
 
-class Smashing_Updater {
-  protected $file;
-  protected $plugin;
-  protected $basename;
-  protected $active;
-
-  public function __construct( $file ) {
-    $this->file = $file;
-    add_action( 'admin_init', array( $this, 'set_plugin_properties' ) );
-    return $this;
-  }
-
-  public function set_plugin_properties() {
-    $this->plugin   = get_plugin_data( $this->file );
-    $this->basename = plugin_basename( $this->file );
-    $this->active   = is_plugin_active( $this->basename );
-  }
-}
-
-
-public function initialize() {
-  add_filter( 'pre_set_site_transient_update_plugins', array( $this, 'modify_transient' ), 10, 1 );
-  add_filter( 'plugins_api', array( $this, 'plugin_popup' ), 10, 3);
-  add_filter( 'upgrader_post_install', array( $this, 'after_install' ), 10, 3 );
-}
-
-// Include our updater file
-include_once( plugin_dir_path( __FILE__ ) . 'update.php');
-
-$updater = new Smashing_Updater( __FILE__ ); // instantiate our class
-$updater->set_username( 'jaspreet42' ); // set username
-$updater->set_repository( 'bsd-structure-data' ); // set repo
-$updater->initialize(); // initialize the updater
-
-public function modify_transient( $transient ) {
-
-  if( property_exists( $transient, 'checked') ) { // Check if transient has a checked property
-    if( $checked = $transient->checked ) { // Did WordPress check for updates?
-      $this->get_repository_info(); // Get the repo info
-      $out_of_date = version_compare( $this->github_response['tag_name'], $checked[$this->basename], 'gt' ); // Check if we're out of date
-      if( $out_of_date ) {
-        $new_files = $this->github_response['zipball_url']; // Get the ZIP
-        $slug = current( explode('/', $this->basename ) ); // Create valid slug
-        $plugin = array( // setup our plugin info
-          'url' => $this->plugin["PluginURI"],
-          'slug' => $slug,
-          'package' => $new_files,
-          'new_version' => $this->github_response['tag_name']
-        );
-        $transient->response[ $this->basename ] = (object) $plugin; // Return it in response
-      }
+class BFIGitHubPluginUpdater {
+ 
+    private $slug; // plugin slug
+    private $pluginData; // plugin data
+    private $username="jaspreet42"; // GitHub username
+    private $repo="bsd-structure-data"; // GitHub repo name
+    private $pluginFile; // __FILE__ of our plugin
+    private $githubAPIResult; // holds data from GitHub
+    private $accessToken; // GitHub private repo token
+ 
+    function __construct( $pluginFile, $gitHubUsername, $gitHubProjectName, $accessToken = '' ) {
+        add_filter( "pre_set_site_transient_update_plugins", array( $this, "setTransitent" ) );
+        add_filter( "plugins_api", array( $this, "setPluginInfo" ), 10, 3 );
+        add_filter( "upgrader_post_install", array( $this, "postInstall" ), 10, 3 );
+ 
+        $this->pluginFile = $pluginFile;
+        $this->username = $gitHubUsername;
+        $this->repo = $gitHubProjectName;
+        $this->accessToken = $accessToken;
     }
-  }
-  return $transient; // Return filtered transient
+ 
+    // Get information regarding our plugin from WordPress
+    private function initPluginData() {
+        // code here
+      $this->slug = plugin_basename( $this->pluginFile );
+$this->pluginData = get_plugin_data( $this->pluginFile );
+    }
+ 
+    // Get information regarding our plugin from GitHub
+    private function getRepoReleaseInfo() {
+       / Only do this once
+if ( ! empty( $this->githubAPIResult ) ) {
+    return;
+}
+      
+     // Query the GitHub API
+$url = "https://api.github.com/repos/{$this->username}/{$this->repo}/releases";
+ 
+// We need the access token for private repos
+if ( ! empty( $this->accessToken ) ) {
+    $url = add_query_arg( array( "access_token" => $this->accessToken ), $url );
+}
+ 
+// Get the results
+$this->githubAPIResult = wp_remote_retrieve_body( wp_remote_get( $url ) );
+if ( ! empty( $this->githubAPIResult ) ) {
+    $this->githubAPIResult = @json_decode( $this->githubAPIResult );
+} 
+      
+     // Use only the latest release
+if ( is_array( $this->githubAPIResult ) ) {
+    $this->githubAPIResult = $this->githubAPIResult[0];
+} 
+      
+    }
+ 
+    // Push in plugin version information to get the update notification
+    public function setTransitent( $transient ) {
+      // If we have checked the plugin data before, don't re-check
+if ( empty( $transient->checked ) ) {
+    return $transient;
+}
+      // Get plugin & GitHub release information
+$this->initPluginData();
+$this->getRepoReleaseInfo();
+      // Check the versions if we need to do an update
+$doUpdate = version_compare( $this->githubAPIResult->tag_name, $transient->checked[$this->slug] );
+      
+      // Update the transient to include our updated plugin data
+if ( $doUpdate == 1 ) {
+    $package = $this->githubAPIResult->zipball_url;
+ 
+    // Include the access token for private GitHub repos
+    if ( !empty( $this->accessToken ) ) {
+        $package = add_query_arg( array( "access_token" => $this->accessToken ), $package );
+    }
+ 
+    $obj = new stdClass();
+    $obj->slug = $this->slug;
+    $obj->new_version = $this->githubAPIResult->tag_name;
+    $obj->url = $this->pluginData["PluginURI"];
+    $obj->package = $package;
+    $transient->response[$this->slug] = $obj;
+}
+ 
+return $transient;
+      
+      
+      
+      
+    }
+ 
+    // Push in plugin version information to display in the details lightbox
+    public function setPluginInfo( $false, $action, $response ) {
+        // code ehre
+        return $response;
+    }
+ 
+    // Perform additional actions to successfully install our plugin
+    public function postInstall( $true, $hook_extra, $result ) {
+        // code here
+        return $result;
+    }
 }
